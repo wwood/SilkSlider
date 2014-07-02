@@ -65,4 +65,43 @@ KKMRNEENEDSEGELTNVDSIITQ'
     res = Bio::Commandeer.run command, :stdin => fasta
     res.should == ''
   end
+
+  it 'should work with multiple sequences' do
+    acp = 'MKILLLCIIFLYYVNAFKNTQKDGVSLQILKKKRSNQVNFLNRKNDYNLIKNKNPSSSLKSTFDDIKKIISKQLSVEEDK'+
+      'IQMNSNFTKDLGADSLDLVELIMALEEKFNVTISDQDALKINTVQDAIDYIEKNNKQ'
+    acp_without_start_sp = 'SLQILKKKRSNQVNFLNRKNDYNLIKNKNPSSSLKSTFDDIKKIISKQLSVEEDK'+
+      'IQMNSNFTKDLGADSLDLVELIMALEEKFNVTISDQDALKINTVQDAIDYIEKNNKQ'
+
+    fasta = [
+      '>positive1',
+      acp + 'G'*30,
+      '>neg',
+      acp_without_start_sp,
+      '>pos2 yeh',
+      acp + 'G'*25,
+      ].join("\n")+"\n"
+    command = "#{PATH_TO_SCRIPT} --quiet /dev/stdin"
+    res = Bio::Commandeer.run command, :stdin => fasta
+    res.should == [
+      '>positive1',
+      acp + 'G'*30,
+      '>pos2 yeh',
+      acp + 'G'*25,
+      ].join("\n")+"\n"
+  end
+
+  it 'shoudl work with changed min gly' do
+    acp = 'MKILLLCIIFLYYVNAFKNTQKDGVSLQILKKKRSNQVNFLNRKNDYNLIKNKNPSSSLKSTFDDIKKIISKQLSVEEDK'+
+      'IQMNSNFTKDLGADSLDLVELIMALEEKFNVTISDQDALKINTVQDAIDYIEKNNKQ'
+    fasta = [
+      '>positive1',
+      acp + 'G'*15,
+      ].join("\n")+"\n"
+    command = "#{PATH_TO_SCRIPT} --quiet /dev/stdin"
+    res = Bio::Commandeer.run command, :stdin => fasta
+    res.should == ''
+    command = "#{PATH_TO_SCRIPT} --quiet /dev/stdin --min-glycines 5"
+    res = Bio::Commandeer.run command, :stdin => fasta
+    res.should == fasta
+  end
 end

@@ -29,10 +29,10 @@ o = OptionParser.new do |opts|
       \n\n"
 
   opts.separator "\nOptional parameters:\n\n"
-  opts.on("--window-size", Integer, "Size of the window to determine glycine percentage over [default: #{options[:window_size] }]") do |arg|
+  opts.on("--window-size NUM", Integer, "Size of the window to determine glycine percentage over [default: #{options[:window_size] }]") do |arg|
     options[:window_size] = arg
   end
-  opts.on("--min-glycines", Integer, "Number of glycines in a window for the protein to be considered silk-like, as an absolute number (not percentage) [default: #{options[:min_glycines] }]") do |arg|
+  opts.on("--min-glycines NUM", Integer, "Number of glycines in a window for the protein to be considered silk-like, as an absolute number (not percentage) [default: #{options[:min_glycines] }]") do |arg|
     options[:min_glycines] = arg
   end
   opts.separator "\nVerbosity:\n\n"
