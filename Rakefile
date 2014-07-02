@@ -20,7 +20,7 @@ Jeweler::Tasks.new do |gem|
   gem.summary = %Q{Predict silk-like proteins from its amino acid sequence}
   gem.description = %Q{Predict silk-like proteins from its amino acid sequence.}
   gem.email = "donttrustben near gmail.com"
-  gem.authors = ["Ben J. Woodcroft"]
+  gem.authors = ["Carmel McDougall", "Ben J. Woodcroft", "Bernard Degnan"]
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
