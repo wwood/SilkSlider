@@ -21,7 +21,8 @@ To run the program:
 ```sh
 silk_slider my.fasta
 ```
-The program outputs a 
+The program outputs a FASTA file of all silk-like proteins.
+
 To see the help:
 ```sh
 silk_slider -h
