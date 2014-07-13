@@ -35,6 +35,9 @@ o = OptionParser.new do |opts|
   opts.on("--min-glycines NUM", Integer, "Number of glycines in a window for the protein to be considered silk-like, as an absolute number (not percentage) [default: #{options[:min_glycines] }]") do |arg|
     options[:min_glycines] = arg
   end
+  opts.on("--signalp-binary PATH", "Path to signalp binary to use [default: use 'signalp' on $PATH }]") do |arg|
+    options[:signalp_binary] = arg
+  end
   opts.separator "\nVerbosity:\n\n"
   opts.on("-q", "--quiet", "Run quietly, set logging to ERROR level [default INFO]") {options[:log_level] = 'error'}
   opts.on("--logger filename",String,"Log to file [default #{options[:logger]}]") { |name| options[:logger] = name}
@@ -52,12 +55,21 @@ Bio::Log::CLI.logger(options[:logger]); Bio::Log::CLI.trace(options[:log_level])
 signalp_runner = Bio::SignalP::Wrapper.new
 tmhmm_runner = Bio::TMHMM::TmHmmWrapper.new
 
+example_result = nil
+num_predicted = 0
+num_considered = 0
+
 Bio::FlatFile.open(Bio::FastaFormat, ARGF).each do |seq|
-  signalp_result = signalp_runner.calculate(seq.seq)
+  signalp_result = signalp_runner.calculate(seq.seq, :binary_path => options[:signalp_binary])
   if signalp_result.nil?
     $stderr.puts "Unexpected empty sequence detected, ignoring: #{seq.definition}"
     next
   end
+  if example_result.nil?
+    example_result = signalp_result
+    log.info "Using SignalP version: #{example_result.class}" if log.info?
+  end
+  num_considered += 1
 
   log.debug "Sequence #{seq.definition} predicted by SignalP? #{signalp_result.prediction}" if log.debug?
   if signalp_result.prediction
@@ -75,7 +87,10 @@ Bio::FlatFile.open(Bio::FastaFormat, ARGF).each do |seq|
         # We have a winner. Output.
         puts ">#{seq.definition}"
         puts seq.seq
+        num_predicted += 1
       end
     end
   end
 end
+
+log.info "Predicted #{num_predicted} out of #{num_considered} as silk-like" if log.info?
