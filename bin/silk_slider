@@ -68,11 +68,18 @@ Bio::FlatFile.open(Bio::FastaFormat, ARGF).each do |seq|
   if example_result.nil?
     example_result = signalp_result
     log.info "Using SignalP version: #{example_result.class}" if log.info?
+    if !example_result.kind_of?(Bio::SignalP::Version3::Result)
+      log.warn "================================================================================"
+      log.warn "SilkSlider is intended for use with SignalP version 3, where a different version is being used here."
+      log.warn "Your results may vary...."
+      log.warn "To specify a particular signalp binary to be used, use the --signalp-binary flag"
+      log.warn "================================================================================"
+    end
   end
   num_considered += 1
 
-  log.debug "Sequence #{seq.definition} predicted by SignalP? #{signalp_result.prediction}" if log.debug?
-  if signalp_result.prediction
+  log.debug "Sequence #{seq.definition} predicted by SignalP? #{signalp_result.signal?}" if log.debug?
+  if signalp_result.signal?
     sequence_without_signal_peptide = signalp_result.cleave(seq.seq)
 
     tmhmm_protein = tmhmm_runner.calculate sequence_without_signal_peptide
