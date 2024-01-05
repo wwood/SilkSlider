@@ -50,3 +50,5 @@ pkg
 # Ignore Gemfile.lock for gems. See http://yehudakatz.com/2010/12/16/clarifying-the-roles-of-the-gemspec-and-gemfile/
 Gemfile.lock
 *.gemspec
+docker/signalp-3.0.Linux.tar.Z
+docker/tmhmm-2.0c.Linux.tar.gz

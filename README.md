@@ -57,10 +57,12 @@ this is possible.
 
 ## Usage
 
-To run the program:
+To run the program, where `my.fasta` is a FASTA file of protein sequences in the current directory, run:
 ```sh
-$ docker run silk_slider my.fasta
+$ docker run -v .:/data silk_slider /data/my.fasta
 ```
+The `-v .:/data` option mounts the current directory (and therefore your `my.fasta` file within it) as `/data` in the docker container, so that the FASTA file can be accessed by the program.
+
 The program outputs a FASTA file of all silk-like proteins.
 
 To see the help:
